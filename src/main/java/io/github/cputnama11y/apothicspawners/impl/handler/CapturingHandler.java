@@ -1,6 +1,7 @@
-package io.github.cputnama11y.apothicspawners.impl;
+package io.github.cputnama11y.apothicspawners.impl.handler;
 
 import com.mojang.datafixers.util.Pair;
+import io.github.cputnama11y.apothicspawners.impl.enchantment.ApothicEnchantmentEffectComponents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.Optionull;
 import net.minecraft.core.Holder;
@@ -11,17 +12,12 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class CapturingHandler implements LootTableEvents.ModifyDrops {
     @Override
-    public void modifyLootTableDrops(
-            @NotNull Holder<@NotNull LootTable> entry,
-            @NotNull LootContext context,
-            @NotNull List<ItemStack> drops
-    ) {
+    public void modifyLootTableDrops(Holder<LootTable> entry, LootContext context, List<ItemStack> drops) {
         if (
                 !context.hasParameter(LootContextParams.ATTACKING_ENTITY)
                         || !context.hasParameter(LootContextParams.THIS_ENTITY)

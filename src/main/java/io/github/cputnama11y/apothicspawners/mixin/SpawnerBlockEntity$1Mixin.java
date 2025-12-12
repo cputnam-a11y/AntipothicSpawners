@@ -1,8 +1,11 @@
 package io.github.cputnama11y.apothicspawners.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import io.github.cputnama11y.apothicspawners.impl.ApothicAttachments;
+import io.github.cputnama11y.apothicspawners.impl.stats.SpawnerStats;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
@@ -12,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@SuppressWarnings("UnstableApiUsage")
+
 @Mixin(targets = "net.minecraft.world.level.block.entity.SpawnerBlockEntity$1")
 public class SpawnerBlockEntity$1Mixin extends BaseSpawnerMixin {
     @Unique
@@ -28,6 +31,37 @@ public class SpawnerBlockEntity$1Mixin extends BaseSpawnerMixin {
 
     @Override
     protected boolean checkRedstoneControl(BaseSpawner instance, Level level, BlockPos blockPos, Operation<Boolean> original) {
-        return super.checkRedstoneControl(instance, level, blockPos, original) && (!this.spawner.hasAttached(ApothicAttachments.REDSTONE_CONTROL) || (spawner.getLevel() != null && spawner.getLevel().hasNeighborSignal(spawner.getBlockPos())));
+        return super.checkRedstoneControl(instance, level, blockPos, original) && (!SpawnerStats.REDSTONE_CONTROL.getValue(spawner) || (spawner.getLevel() != null && spawner.getLevel().hasNeighborSignal(spawner.getBlockPos())));
+    }
+
+    @Override
+    protected boolean checkPlayerOverride(boolean original, Level level, BlockPos blockPos) {
+        return super.checkPlayerOverride(original, level, blockPos) || SpawnerStats.IGNORE_PLAYERS.getValue(spawner);
+    }
+
+    @Override
+    protected void handleBurningModifier(ServerLevel serverLevel, BlockPos blockPos, CallbackInfo ci, Entity entity) {
+        if (SpawnerStats.BURNING.getValue(spawner)) {
+            entity.getSelfAndPassengers().forEach(selfOrPassenger -> selfOrPassenger.setRemainingFireTicks(Integer.MAX_VALUE));
+        }
+    }
+
+    @Override
+    protected void handleInitialHealthModifier(ServerLevel serverLevel, BlockPos blockPos, CallbackInfo ci, Entity entity) {
+        float healthMultiplier = SpawnerStats.INITIAL_HEALTH.getValue(spawner);
+        if (healthMultiplier != 1) {
+            entity.getSelfAndPassengers().forEach(selfOrPassenger -> {
+                if (selfOrPassenger instanceof LivingEntity living) {
+                    living.setHealth(living.getHealth() * healthMultiplier);
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void handleSilentModifier(ServerLevel serverLevel, BlockPos blockPos, CallbackInfo ci, Entity entity) {
+        if (SpawnerStats.SILENT.getValue(this.spawner)) {
+            entity.getSelfAndPassengers().forEach(selfOrPassenger -> selfOrPassenger.setSilent(true));
+        }
     }
 }

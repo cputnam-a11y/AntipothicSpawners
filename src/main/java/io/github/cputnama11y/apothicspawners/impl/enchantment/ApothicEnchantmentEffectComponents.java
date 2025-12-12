@@ -1,4 +1,4 @@
-package io.github.cputnama11y.apothicspawners.impl;
+package io.github.cputnama11y.apothicspawners.impl.enchantment;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
@@ -7,14 +7,13 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Unit;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.UnaryOperator;
 
 import static io.github.cputnama11y.apothicspawners.impl.ApothicSpawners.id;
 
 public interface ApothicEnchantmentEffectComponents {
-    DataComponentType<@NotNull Unit> CAPTURING = register(
+    DataComponentType<Unit> CAPTURING = register(
             "capturing",
             builder -> builder
                     .persistent(Unit.CODEC)
@@ -22,7 +21,7 @@ public interface ApothicEnchantmentEffectComponents {
                     .cacheEncoding()
     );
 
-    private static <T> DataComponentType<@NotNull T> register(String name, UnaryOperator<DataComponentType.Builder<@NotNull T>> unaryOperator) {
+    private static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> unaryOperator) {
         return Registry.register(
                 BuiltInRegistries.ENCHANTMENT_EFFECT_COMPONENT_TYPE,
                 ResourceKey.create(

@@ -7,7 +7,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -17,7 +16,7 @@ public class ApothicEnchantmentProvider extends FabricDynamicRegistryProvider {
     }
 
     @Override
-    protected void configure(HolderLookup.Provider registries, @NotNull Entries entries) {
+    protected void configure(HolderLookup.Provider registries, Entries entries) {
         entries.add(
                 registries.lookupOrThrow(Registries.ENCHANTMENT)
                         .getOrThrow(
@@ -33,7 +32,7 @@ public class ApothicEnchantmentProvider extends FabricDynamicRegistryProvider {
     }
 
     @Override
-    public @NotNull String getName() {
+    public String getName() {
         return "EnchantmentProvider";
     }
 }

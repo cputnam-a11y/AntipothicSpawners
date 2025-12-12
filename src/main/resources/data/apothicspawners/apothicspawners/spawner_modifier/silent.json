@@ -1,0 +1,11 @@
+{
+  "type": "apothic_spawners:spawner_modifier",
+  "mainhand": "#minecraft:wool",
+  "consumes_offhand": false,
+  "stat_changes": [
+    {
+      "type": "apothicspawners:silent",
+      "value": true
+    }
+  ]
+}

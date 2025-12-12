@@ -1,14 +1,12 @@
 package io.github.cputnama11y.apothicspawners.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import io.github.cputnama11y.apothicspawners.impl.ApothicAttachments;
 import io.github.cputnama11y.apothicspawners.impl.ApothicSpawners;
-import io.github.cputnama11y.apothicspawners.impl.SpawnerInteraction;
+import io.github.cputnama11y.apothicspawners.impl.modifier.SpawnerModifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.ProblemReporter;
-import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -20,6 +18,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SpawnerBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
@@ -65,32 +64,28 @@ public abstract class SpawnerBlockMixin extends BlockMixin {
 
     @Override
     protected InteractionResult handleUseItemOnForSpawners(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult, Operation<InteractionResult> original) {
-        if (!(level.getBlockEntity(blockPos) instanceof SpawnerBlockEntity spawner)) return InteractionResult.FAIL;
+        if (!(level.getBlockEntity(blockPos) instanceof SpawnerBlockEntity spawner))
+            return super.handleUseItemOnForSpawners(itemStack, blockState, level, blockPos, player, hand, blockHitResult, original);
         ItemStack otherHandStack = player.getItemInHand(
                 hand == InteractionHand.MAIN_HAND
                 ? InteractionHand.OFF_HAND
                 : InteractionHand.MAIN_HAND
         );
 
-        if (SpawnerInteraction.REMOVE_REDSTONE_CONTROL.test(itemStack, otherHandStack)) {
-            spawner.removeAttached(ApothicAttachments.REDSTONE_CONTROL);
-            itemStack.consume(1, player);
-
-            if (SpawnerInteraction.REMOVE_REDSTONE_CONTROL.consumesOffHand()) {
-                itemStack.consume(1, player);
+        SpawnerModifier match = SpawnerModifier.findMatch(spawner, itemStack, otherHandStack);
+        if (match != null && match.apply(spawner)) {
+            if (level.isClientSide()) {
+                return InteractionResult.SUCCESS;
             }
 
-            return InteractionResult.SUCCESS;
-        }
-
-        if (SpawnerInteraction.REDSTONE_CONTROL.test(itemStack, otherHandStack)) {
-            spawner.setAttached(ApothicAttachments.REDSTONE_CONTROL, Unit.INSTANCE);
-            itemStack.consume(1, player);
-
-            if (SpawnerInteraction.REDSTONE_CONTROL.consumesOffHand()) {
-                itemStack.consume(1, player);
+            if (!player.isCreative()) {
+                itemStack.shrink(1);
+                if (match.consumesOffhand()) {
+                    otherHandStack.shrink(1);
+                }
             }
 
+            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_ALL);
             return InteractionResult.SUCCESS;
         }
 

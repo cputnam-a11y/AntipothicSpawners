@@ -1,4 +1,4 @@
-package io.github.cputnama11y.apothicspawners.impl;
+package io.github.cputnama11y.apothicspawners.impl.enchantment;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -6,19 +6,17 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.enchantment.Enchantment;
-import org.jetbrains.annotations.NotNull;
 
 import static io.github.cputnama11y.apothicspawners.impl.ApothicSpawners.id;
 import static net.minecraft.world.item.enchantment.Enchantment.enchantment;
 
 public class ApothicEnchantments {
-    public static final ResourceKey<@NotNull Enchantment> CAPTURING = ResourceKey.create(
+    public static final ResourceKey<Enchantment> CAPTURING = ResourceKey.create(
             Registries.ENCHANTMENT,
             id("capturing")
     );
 
-    public static void bootstrap(BootstrapContext<@NotNull Enchantment> bootstrapContext) {
-
+    public static void bootstrap(BootstrapContext<Enchantment> bootstrapContext) {
         register(
                 bootstrapContext,
                 CAPTURING,
@@ -40,7 +38,7 @@ public class ApothicEnchantments {
         );
     }
 
-    private static void register(BootstrapContext<@NotNull Enchantment> bootstrapContext, ResourceKey<@NotNull Enchantment> resourceKey, Enchantment.Builder builder) {
+    private static void register(BootstrapContext<Enchantment> bootstrapContext, ResourceKey<Enchantment> resourceKey, Enchantment.Builder builder) {
         bootstrapContext.register(resourceKey, builder.build(resourceKey.identifier()));
     }
 }
