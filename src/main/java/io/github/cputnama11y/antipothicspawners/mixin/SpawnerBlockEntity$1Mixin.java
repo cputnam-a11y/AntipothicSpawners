@@ -1,7 +1,7 @@
 package io.github.cputnama11y.antipothicspawners.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import io.github.cputnama11y.antipothicspawners.impl.AntipothicAttachments;
+import io.github.cputnama11y.antipothicspawners.impl.attachment.AntipothicAttachments;
 import io.github.cputnama11y.antipothicspawners.impl.stats.SpawnerStats;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

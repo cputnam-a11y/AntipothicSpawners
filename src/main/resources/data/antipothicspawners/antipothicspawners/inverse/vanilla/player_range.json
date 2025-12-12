@@ -3,7 +3,7 @@
   "offhand":"minecraft:quartz",
   "stat_changes": [
     {
-      "type": "apothicspawners:req_player_range",
+      "type": "antipothicspawners:req_player_range",
       "value": -4,
       "min": 1
     }

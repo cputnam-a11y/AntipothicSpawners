@@ -1,6 +1,6 @@
 package io.github.cputnama11y.antipothicspawners.impl.handler;
 
-import io.github.cputnama11y.antipothicspawners.impl.AntipothicAttachments;
+import io.github.cputnama11y.antipothicspawners.impl.attachment.AntipothicAttachments;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.core.Holder;
 import net.minecraft.util.Unit;

@@ -1,55 +1,49 @@
 package io.github.cputnama11y.antipothicspawners.impl.modifier;
 
 import com.google.common.collect.ImmutableList;
-import io.github.cputnama11y.antipothicspawners.impl.AntipothicAttachments;
-import io.github.cputnama11y.antipothicspawners.impl.util.LessSimpleJsonResourceReloadListener;
+import io.github.cputnama11y.antipothicspawners.impl.attachment.AntipothicAttachments;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.core.HolderLookup;
+import net.fabricmc.fabric.api.resource.v1.DataResourceLoader;
+import net.fabricmc.fabric.api.resource.v1.DataResourceStore;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import static io.github.cputnama11y.antipothicspawners.impl.AntipothicSpawners.id;
 
 @SuppressWarnings("UnstableApiUsage")
-public class ModifierLoader extends LessSimpleJsonResourceReloadListener<SpawnerModifier> {
-    private static final List<SpawnerModifier> MODIFIERS = new ArrayList<>();
-    private static @Nullable MinecraftServer SERVER;
+public class ModifierLoader extends SimpleJsonResourceReloadListener<SpawnerModifier> {
+    private final SharedState state;
+    private static final DataResourceStore.Key<ImmutableList<SpawnerModifier>> MODIFIERS_STORE_KEY = new DataResourceStore.Key<>();
 
-    public ModifierLoader(HolderLookup.Provider provider) {
-        super(provider, SpawnerModifier.CODEC.codec(), ResourceKey.createRegistryKey(id("spawner_modifier")));
+    public ModifierLoader(PreparableReloadListener.SharedState state) {
+        super(state.get(ResourceLoader.RELOADER_REGISTRY_LOOKUP_KEY), SpawnerModifier.CODEC.codec(), ResourceKey.createRegistryKey(id("spawner_modifier")));
+        this.state = state;
     }
 
     @Override
-    protected Map<Identifier, SpawnerModifier> prepare(ResourceManager resourceManager, ProfilerFiller profilerFiller, SharedState state) {
-        return super.prepare(resourceManager, profilerFiller, state);
-    }
-
-    @Override
-    protected void apply(Map<Identifier, SpawnerModifier> object, ResourceManager resourceManager, ProfilerFiller profilerFiller, SharedState sharedState) {
-        MODIFIERS.clear();
-        MODIFIERS.addAll(object.values());
-
-        if (SERVER != null) {
-            var immutable = ImmutableList.copyOf(MODIFIERS);
-            SERVER.getAllLevels().forEach(it -> it.setAttached(AntipothicAttachments.MODIFIERS, immutable));
-        }
-
+    protected void apply(Map<Identifier, SpawnerModifier> object, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
+        var mutableResourceStore = state.get(DataResourceLoader.DATA_RESOURCE_STORE_KEY);
+        mutableResourceStore.put(MODIFIERS_STORE_KEY, ImmutableList.copyOf(object.values()));
     }
 
     static {
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            SERVER = server;
-            var immutable = ImmutableList.copyOf(MODIFIERS);
-            SERVER.getAllLevels().forEach(it -> it.setAttached(AntipothicAttachments.MODIFIERS, immutable));
+        ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
+            player.setAttached(AntipothicAttachments.MODIFIERS, player.level().getServer().getOrThrow(MODIFIERS_STORE_KEY));
         });
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> SERVER = null);
+//        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> {
+//            System.out.println("END_DATAPACK_RELOAD");
+//        });
+//        ServerLifecycleEvents.SERVER_STOPPING.register(server -> SERVER = null);
     }
+
+//    private static void updateModifiers(MinecraftServer server, ImmutableList<SpawnerModifier> modifiers) {
+//        server.getAllLevels().forEach(it -> it.setAttached(AntipothicAttachments.MODIFIERS, modifiers));
+//    }
 }

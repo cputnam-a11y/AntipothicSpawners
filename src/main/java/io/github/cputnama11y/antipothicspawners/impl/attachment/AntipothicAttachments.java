@@ -1,4 +1,4 @@
-package io.github.cputnama11y.antipothicspawners.impl;
+package io.github.cputnama11y.antipothicspawners.impl.attachment;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;

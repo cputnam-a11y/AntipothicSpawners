@@ -5,6 +5,7 @@ import io.github.cputnama11y.antipothicspawners.impl.handler.CapturingHandler;
 import io.github.cputnama11y.antipothicspawners.impl.handler.EchoingHandler;
 import io.github.cputnama11y.antipothicspawners.impl.modifier.ModifierLoader;
 import io.github.cputnama11y.antipothicspawners.impl.stats.SpawnerStats;
+import io.github.cputnama11y.antipothicspawners.impl.util.StatefulPreparableReloadListener;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
@@ -30,9 +31,10 @@ public class AntipothicSpawners implements ModInitializer {
         SpawnerStats.init();
         ResourceLoader.get(PackType.SERVER_DATA).registerReloader(
                 id("modifier_loader"),
-                (sharedState, executor, preparationBarrier, executor2) -> new ModifierLoader(
-                        sharedState.get(ResourceLoader.RELOADER_REGISTRY_LOOKUP_KEY)
-                ).reload(sharedState, executor, preparationBarrier, executor2)
+                new StatefulPreparableReloadListener(
+                        ModifierLoader.class.getSimpleName(),
+                        ModifierLoader::new
+                )
         );
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(
                 entries -> entries.accept(Items.SPAWNER)

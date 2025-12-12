@@ -1,9 +1,9 @@
 {
-  "mainhand": "minecraft:fermented_spider_eye",
+  "mainhand": "minecraft:piston",
   "offhand": "minecraft:quartz",
   "stat_changes": [
     {
-      "type": "apothicspawners:spawn_count",
+      "type": "antipothicspawners:spawn_range",
       "value": -2,
       "min": 1
     }

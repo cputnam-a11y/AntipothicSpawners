@@ -1,6 +1,6 @@
 package io.github.cputnama11y.antipothicspawners.impl.stats;
 
-import io.github.cputnama11y.antipothicspawners.impl.AntipothicAttachments;
+import io.github.cputnama11y.antipothicspawners.impl.attachment.AntipothicAttachments;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.minecraft.core.Registry;

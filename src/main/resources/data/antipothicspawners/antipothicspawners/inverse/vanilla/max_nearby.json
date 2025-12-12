@@ -1,9 +1,9 @@
 {
-  "mainhand": "minecraft:piston",
+  "mainhand": "minecraft:ghast_tear",
   "offhand": "minecraft:quartz",
   "stat_changes": [
     {
-      "type": "apothicspawners:spawn_range",
+      "type": "antipothicspawners:max_nearby_entities",
       "value": -2,
       "min": 1
     }

@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.cputnama11y.antipothicspawners.impl.AntipothicAttachments;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -93,8 +92,8 @@ public class SpawnerModifier {
     }
 
     @Nullable
-    public static SpawnerModifier findMatch(SpawnerBlockEntity tile, ItemStack mainhand, ItemStack offhand) {
-        return tile.getLevel().getAttached(AntipothicAttachments.MODIFIERS)
+    public static SpawnerModifier findMatch(ImmutableList<SpawnerModifier> modifiers, SpawnerBlockEntity tile, ItemStack mainhand, ItemStack offhand) {
+        return modifiers
                 .stream()
                 .sorted(
                         (r1, r2) ->

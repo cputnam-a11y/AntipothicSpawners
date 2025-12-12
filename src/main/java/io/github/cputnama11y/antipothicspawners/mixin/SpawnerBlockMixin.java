@@ -2,6 +2,7 @@ package io.github.cputnama11y.antipothicspawners.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import io.github.cputnama11y.antipothicspawners.impl.AntipothicSpawners;
+import io.github.cputnama11y.antipothicspawners.impl.attachment.AntipothicAttachments;
 import io.github.cputnama11y.antipothicspawners.impl.modifier.SpawnerModifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -33,6 +34,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("UnstableApiUsage")
 @Mixin(SpawnerBlock.class)
 public abstract class SpawnerBlockMixin extends BlockMixin {
     @Override
@@ -70,8 +72,8 @@ public abstract class SpawnerBlockMixin extends BlockMixin {
                 ? InteractionHand.OFF_HAND
                 : InteractionHand.MAIN_HAND
         );
-
-        SpawnerModifier match = SpawnerModifier.findMatch(spawner, itemStack, otherHandStack);
+        @SuppressWarnings("DataFlowIssue") // will never be null, and if it is, we should die loudly
+        SpawnerModifier match = SpawnerModifier.findMatch(player.getAttached(AntipothicAttachments.MODIFIERS), spawner, itemStack, otherHandStack);
         if (match != null && match.apply(spawner)) {
             if (level.isClientSide()) {
                 return InteractionResult.SUCCESS;

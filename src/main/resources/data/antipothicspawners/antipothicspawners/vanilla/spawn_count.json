@@ -2,7 +2,7 @@
   "mainhand": "minecraft:fermented_spider_eye",
   "stat_changes": [
     {
-      "type": "apothicspawners:spawn_count",
+      "type": "antipothicspawners:spawn_count",
       "value": 2,
       "max": 16
     }

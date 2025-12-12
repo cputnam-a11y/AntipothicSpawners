@@ -1,9 +1,9 @@
 {
-  "mainhand": "minecraft:ghast_tear",
+  "mainhand": "minecraft:fermented_spider_eye",
   "offhand": "minecraft:quartz",
   "stat_changes": [
     {
-      "type": "apothicspawners:max_nearby_entities",
+      "type": "antipothicspawners:spawn_count",
       "value": -2,
       "min": 1
     }
