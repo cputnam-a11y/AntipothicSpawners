@@ -4,6 +4,7 @@ import io.github.cputnama11y.antipothicspawners.impl.enchantment.AntipothicEncha
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.util.Util;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -14,6 +15,6 @@ public class AntipothicSpawnersLangProvider extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder translationBuilder) {
-        translationBuilder.add(AntipothicEnchantments.CAPTURING.identifier(), "Capturing");
+        translationBuilder.add(Util.makeDescriptionId("enchantment", AntipothicEnchantments.CAPTURING.identifier()), "Capturing");
     }
 }
