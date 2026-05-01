@@ -1,7 +1,7 @@
 package io.github.cputnama11y.anitpothicspawners.impl.datagen;
 
 import io.github.cputnama11y.antipothicspawners.impl.enchantment.AntipothicEnchantments;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.util.Util;
@@ -9,7 +9,7 @@ import net.minecraft.util.Util;
 import java.util.concurrent.CompletableFuture;
 
 public class AntipothicSpawnersLangProvider extends FabricLanguageProvider {
-    public AntipothicSpawnersLangProvider(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
+    public AntipothicSpawnersLangProvider(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(dataOutput, registryLookup);
     }
 

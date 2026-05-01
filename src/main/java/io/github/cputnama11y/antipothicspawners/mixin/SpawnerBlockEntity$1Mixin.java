@@ -2,14 +2,17 @@ package io.github.cputnama11y.antipothicspawners.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import io.github.cputnama11y.antipothicspawners.impl.attachment.AntipothicAttachments;
+import io.github.cputnama11y.antipothicspawners.impl.mixinsupport.StateHolder;
 import io.github.cputnama11y.antipothicspawners.impl.stats.SpawnerStats;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.SpawnData;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -83,7 +86,6 @@ public class SpawnerBlockEntity$1Mixin extends BaseSpawnerMixin {
     }
 
     @Override
-    @SuppressWarnings("UnstableApiUsage")
     protected void handleEchoingModifier(ServerLevel serverLevel, BlockPos blockPos, CallbackInfo ci, Entity entity) {
         int echoing = SpawnerStats.ECHOING.getValue(this.spawner);
         if (echoing > 0) {
@@ -99,5 +101,20 @@ public class SpawnerBlockEntity$1Mixin extends BaseSpawnerMixin {
     @Override
     protected boolean cancelPlacementCheckIfIgnoreConditions(boolean original) {
         return super.cancelPlacementCheckIfIgnoreConditions(original) || Objects.requireNonNullElse(SpawnerStats.IGNORE_CONDITIONS.getValue(this.spawner), false);
+    }
+
+    @Override
+    protected boolean fixIronGolemsAreStupidAndWontSpawn(Mob instance, LevelReader levelReader, Operation<Boolean> original) {
+        if (Objects.requireNonNullElse(SpawnerStats.IGNORE_CONDITIONS.getValue(this.spawner), false)) {
+            var current = StateHolder.SPAWNING_WITHOUT_MOJANK_STUPIDITY.get();
+            try {
+                StateHolder.SPAWNING_WITHOUT_MOJANK_STUPIDITY.set(Optional.of(Unit.INSTANCE));
+                return super.fixIronGolemsAreStupidAndWontSpawn(instance, levelReader, original);
+            } finally {
+                if (current.isEmpty()) StateHolder.SPAWNING_WITHOUT_MOJANK_STUPIDITY.remove();
+                else StateHolder.SPAWNING_WITHOUT_MOJANK_STUPIDITY.set(current);
+            }
+        }
+        return super.fixIronGolemsAreStupidAndWontSpawn(instance, levelReader, original);
     }
 }

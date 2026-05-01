@@ -21,6 +21,7 @@ public class LevelStat extends CustomStat<Integer> {
     @Override
     public boolean applyModifier(SpawnerBlockEntity spawner, Integer value, Optional<Integer> min, Optional<Integer> max) {
         Integer old = this.getValue(spawner);
+        // TODO make it not reset other changes to allow multiple recipes
         this.setValue(spawner, this.clamp(old + value, min, max));
         return !old.equals(this.getValue(spawner));
     }

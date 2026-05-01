@@ -3,7 +3,7 @@ package io.github.cputnama11y.anitpothicspawners.impl.datagen;
 import io.github.cputnama11y.antipothicspawners.impl.modifier.SpawnerModifier;
 import io.github.cputnama11y.antipothicspawners.impl.modifier.StatModifier;
 import io.github.cputnama11y.antipothicspawners.impl.stats.SpawnerStats;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricCodecDataProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -21,7 +21,7 @@ import java.util.function.BiConsumer;
 import static io.github.cputnama11y.antipothicspawners.impl.AntipothicSpawners.id;
 
 public class AntipothicSpawnerModifierProvider extends FabricCodecDataProvider<SpawnerModifier> {
-    protected AntipothicSpawnerModifierProvider(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+    protected AntipothicSpawnerModifierProvider(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(dataOutput, registriesFuture, PackOutput.Target.DATA_PACK, id("spawner_modifier").toString().replace(":", "/"), SpawnerModifier.CODEC.codec());
     }
 
@@ -170,7 +170,7 @@ public class AntipothicSpawnerModifierProvider extends FabricCodecDataProvider<S
                 new SpawnerModifier(
                         Ingredient.of(Items.POINTED_DRIPSTONE),
                         List.of(
-                                new StatModifier<>(SpawnerStats.INITIAL_HEALTH, -0.05f, Optional.empty(), Optional.of(1.0f), StatModifier.Mode.ADD)
+                                new StatModifier<>(SpawnerStats.INITIAL_HEALTH, -0.05f, Optional.of(0.20f), Optional.empty(), StatModifier.Mode.ADD)
                         )
                 )
         );
@@ -181,7 +181,7 @@ public class AntipothicSpawnerModifierProvider extends FabricCodecDataProvider<S
                         Optional.of(Ingredient.of(Items.QUARTZ)),
                         false,
                         List.of(
-                                new StatModifier<>(SpawnerStats.INITIAL_HEALTH, 0.05f, Optional.of(0.20f), Optional.empty(), StatModifier.Mode.ADD)
+                                new StatModifier<>(SpawnerStats.INITIAL_HEALTH, 0.05f, Optional.empty(), Optional.of(1.0f), StatModifier.Mode.ADD)
                         )
                 )
         );

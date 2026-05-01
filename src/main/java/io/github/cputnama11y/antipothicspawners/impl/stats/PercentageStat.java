@@ -28,6 +28,7 @@ public class PercentageStat extends CustomStat<Float> {
     @Override
     public boolean applyModifier(SpawnerBlockEntity spawner, Float value, Optional<Float> min, Optional<Float> max) {
         Float old = this.getValue(spawner);
+        // TODO make it not reset other changes to allow multiple recipes
         this.setValue(spawner, this.clamp(old + value, min, max));
         return !old.equals(this.getValue(spawner));
     }

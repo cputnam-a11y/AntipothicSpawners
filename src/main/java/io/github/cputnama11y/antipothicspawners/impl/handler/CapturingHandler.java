@@ -27,10 +27,9 @@ public class CapturingHandler implements LootTableEvents.ModifyDrops {
         var weapon = attacker.getWeaponItem();
         if (weapon == null) return;
         int enchantmentLevel = Optionull.mapOrDefault(EnchantmentHelper.getHighestLevel(weapon, AntipothicEnchantmentEffectComponents.CAPTURING), Pair::getSecond, 0);
-        if (killed.level().random.nextFloat() >= enchantmentLevel * 0.1) return;
-        Item eggItem = SpawnEggItem.byId(killed.getType());
-        if (eggItem == null) return;
-        drops.add(new ItemStack(eggItem));
-
+        if (killed.level().getRandom().nextFloat() >= enchantmentLevel * 0.1) return;
+        SpawnEggItem.byId(killed.getType())
+                .map(ItemStack::new)
+                .ifPresent(drops::add);
     }
 }

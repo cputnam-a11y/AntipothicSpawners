@@ -9,6 +9,7 @@
     "BlockEntityTypeMixin",
     "BlockMixin",
     "EntityMixin",
+    "IronGolemMixin",
     "SimplePreparableResourceReloadListenerMixin",
     "SpawnerBlockEntity$1Mixin",
     "SpawnerBlockEntityMixin",

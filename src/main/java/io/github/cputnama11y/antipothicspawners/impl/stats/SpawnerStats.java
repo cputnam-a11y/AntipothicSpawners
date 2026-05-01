@@ -15,7 +15,7 @@ import static io.github.cputnama11y.antipothicspawners.impl.AntipothicSpawners.i
 public class SpawnerStats {
 
     public static final Registry<SpawnerStat<?>> REGISTRY =
-            FabricRegistryBuilder.<SpawnerStat<?>>createSimple(
+            FabricRegistryBuilder.<SpawnerStat<?>>create(
                             ResourceKey.createRegistryKey(
                                     id("spawner_stat")
                             )

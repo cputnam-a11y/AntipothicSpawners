@@ -1,11 +1,13 @@
 package io.github.cputnama11y.antipothicspawners.impl.mixinsupport;
 
 import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.util.Unit;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
 public class StateHolder {
+    public static final ThreadLocal<Optional<Unit>> SPAWNING_WITHOUT_MOJANK_STUPIDITY = ThreadLocal.withInitial(Optional::empty);
     private static final ThreadLocal<Optional<PreparableReloadListener.SharedState>> STATE = ThreadLocal.withInitial(Optional::empty);
 
     public static Optional<PreparableReloadListener.SharedState> currentState() {

@@ -10,8 +10,10 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.SpawnData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -115,6 +117,14 @@ public class BaseSpawnerMixin {
     )
     protected boolean cancelPlacementCheckIfIgnoreConditions(boolean original) {
         return original;
+    }
+
+    @WrapOperation(
+            method = "serverTick",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;checkSpawnObstruction(Lnet/minecraft/world/level/LevelReader;)Z")
+    )
+    protected boolean fixIronGolemsAreStupidAndWontSpawn(Mob instance, LevelReader levelReader, Operation<Boolean> original) {
+        return original.call(instance, levelReader);
     }
 
 }

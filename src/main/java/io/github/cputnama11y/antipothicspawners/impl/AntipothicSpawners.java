@@ -8,7 +8,8 @@ import io.github.cputnama11y.antipothicspawners.impl.modifier.ModifierLoader;
 import io.github.cputnama11y.antipothicspawners.impl.stats.SpawnerStats;
 import io.github.cputnama11y.antipothicspawners.impl.util.StatefulPreparableReloadListener;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.attachment.v1.GlobalAttachments;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.network.chat.Component;
@@ -17,8 +18,13 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Objects;
+import java.util.function.Function;
 
 public class AntipothicSpawners implements ModInitializer {
     public static final String MOD_ID = "antipothicspawners";
@@ -31,14 +37,14 @@ public class AntipothicSpawners implements ModInitializer {
         LootTableEvents.MODIFY_DROPS.register(new EchoingHandler());
         SpawnerStats.init();
         AntipothicComponents.init();
-        ResourceLoader.get(PackType.SERVER_DATA).registerReloader(
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(
                 id("modifier_loader"),
                 new StatefulPreparableReloadListener(
                         ModifierLoader.class.getSimpleName(),
                         ModifierLoader::new
                 )
         );
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(
                 entries -> entries.accept(Items.SPAWNER)
         );
     }

@@ -17,25 +17,35 @@ import java.util.Map;
 
 import static io.github.cputnama11y.antipothicspawners.impl.AntipothicSpawners.id;
 
-@SuppressWarnings("UnstableApiUsage")
 public class ModifierLoader extends SimpleJsonResourceReloadListener<SpawnerModifier> {
     private final SharedState state;
     private static final DataResourceStore.Key<ImmutableList<SpawnerModifier>> MODIFIERS_STORE_KEY = new DataResourceStore.Key<>();
 
     public ModifierLoader(PreparableReloadListener.SharedState state) {
-        super(state.get(ResourceLoader.RELOADER_REGISTRY_LOOKUP_KEY), SpawnerModifier.CODEC.codec(), ResourceKey.createRegistryKey(id("spawner_modifier")));
+        super(state.get(ResourceLoader.REGISTRY_LOOKUP_KEY), SpawnerModifier.CODEC.codec(), ResourceKey.createRegistryKey(id("spawner_modifier")));
         this.state = state;
     }
 
     @Override
     protected void apply(Map<Identifier, SpawnerModifier> object, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
-        var mutableResourceStore = state.get(DataResourceLoader.DATA_RESOURCE_STORE_KEY);
-        mutableResourceStore.put(MODIFIERS_STORE_KEY, ImmutableList.copyOf(object.values()));
+        state.get(DataResourceLoader.DATA_RESOURCE_STORE_KEY).put(
+                MODIFIERS_STORE_KEY,
+                ImmutableList.copyOf(object.values())
+        );
     }
 
     static {
-        ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
-            player.setAttached(AntipothicAttachments.MODIFIERS, player.level().getServer().getOrThrow(MODIFIERS_STORE_KEY));
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> server.globalAttachments().setAttached(
+                AntipothicAttachments.MODIFIERS,
+                server.getOrThrow(MODIFIERS_STORE_KEY)
+        ));
+        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, _, success) -> {
+            if (success) {
+                server.globalAttachments().setAttached(
+                        AntipothicAttachments.MODIFIERS,
+                        server.getOrThrow(MODIFIERS_STORE_KEY)
+                );
+            }
         });
     }
 }

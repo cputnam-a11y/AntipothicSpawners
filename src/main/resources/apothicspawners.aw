@@ -1,4 +1,4 @@
-accessWidener v2 named
+accessWidener v2 official
 accessible field net/minecraft/world/level/block/entity/SpawnerBlockEntity spawner Lnet/minecraft/world/level/BaseSpawner;
 mutable field net/minecraft/world/level/block/entity/SpawnerBlockEntity spawner Lnet/minecraft/world/level/BaseSpawner;
 accessible field net/minecraft/world/level/BaseSpawner spawnDelay I

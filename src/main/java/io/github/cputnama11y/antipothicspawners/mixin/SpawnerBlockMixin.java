@@ -19,6 +19,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -47,7 +48,7 @@ public abstract class SpawnerBlockMixin extends BlockMixin {
     @Override
     @SuppressWarnings("deprecation")
     protected List<ItemStack> addSpawnerToDrops(BlockState blockState, LootParams.Builder builder, Operation<List<ItemStack>> original) {
-        ItemStack tool = builder.getParameter(LootContextParams.TOOL);
+        ItemInstance tool = builder.getParameter(LootContextParams.TOOL);
         Optional<Holder.Reference<@NotNull Enchantment>> silkTouch = builder.getLevel().holderLookup(Registries.ENCHANTMENT).get(Enchantments.SILK_TOUCH);
 
         if (silkTouch.isEmpty() || EnchantmentHelper.getItemEnchantmentLevel(silkTouch.get(), tool) < 1)
@@ -85,7 +86,7 @@ public abstract class SpawnerBlockMixin extends BlockMixin {
                 ? InteractionHand.OFF_HAND
                 : InteractionHand.MAIN_HAND
         );
-        var modifiers = player.getAttached(AntipothicAttachments.MODIFIERS);
+        var modifiers = level.globalAttachments().getAttached(AntipothicAttachments.MODIFIERS);
         if (modifiers == null) {
             AntipothicSpawners.LOGGER.info("Failed to find modifiers");
             AntipothicSpawners.LOGGER.info("Debug Info: {}", OptionalFabricAttachmentDebugData.info(player));
